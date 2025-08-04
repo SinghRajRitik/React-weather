@@ -7,6 +7,11 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
+
+  const API_KEY = import.meta.env.VITE_API_KEY;
+
+
+
   const [weather, setWeather] = useState(null);
 
   const [location, setlocation] = useState('New Delhi')
@@ -17,7 +22,7 @@ function App() {
   const fetchData = async () => {
     try {
       const response = await fetch(
-        `http://api.weatherapi.com/v1/current.json?key=9e80569bd0c94be2bd6170552252507&q=${location}&aqi=no`
+        `http://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${location}&aqi=no`
       );
 
       if (!response.ok) {
