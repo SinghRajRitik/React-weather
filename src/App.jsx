@@ -1,70 +1,64 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import NavBar from "./Components/NavBar";
 import Card from "./Components/Card";
 import Footer from "./Components/Footer";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
 function App() {
-
   const API_KEY = import.meta.env.VITE_API_KEY;
+  const staticCities = ['Varanasi', 'Lucknow', 'Kanpur', 'Mirzapur'];
 
+  const [weather, setWeather] = useState({ search: null, static: [] });
+  const [location, setlocation] = useState('New Delhi');
 
+  const fetchData = async (city) => {
+    const response = await fetch(
+      `http://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${city}&aqi=no`
+    );
 
-  const [weather, setWeather] = useState(null);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
-  const [location, setlocation] = useState('New Delhi')
+    return await response.json();
+  };
 
-
-
-
-  const fetchData = async () => {
+  const updateWeatherData = useCallback(async () => {
     try {
-      const response = await fetch(
-        `http://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${location}&aqi=no`
+      const searchData = await fetchData(location);
+
+      const staticDataArray = await Promise.all(
+        staticCities.map(city => fetchData(city))
       );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      console.log("Fetched weather data:", data);
-
-      setWeather(data);
-
-
-
+      setWeather({
+        search: searchData,
+        static: staticDataArray,
+      });
     } catch (error) {
       console.error("Error fetching weather data:", error);
       toast.error("Location not found");
-      
-    }
-  };
-
-  useEffect(() => {
-    if (location.trim() !== "") {
-      fetchData();
     }
   }, [location]);
 
-  const handleSearch = (SearchText) => {
-    console.log("search recieved from Navbar:", SearchText);
+  useEffect(() => {
+    if (location.trim() !== "") {
+      updateWeatherData();
+    }
+  }, [updateWeatherData]);
 
+  const handleSearch = (SearchText) => {
+    console.log("search received from Navbar:", SearchText);
     setlocation(SearchText);
   };
-
-
 
   return (
     <>
       <NavBar onTextChange={handleSearch} />
-      <Card weather={weather} />
-      <Footer />
+      <Card weather={weather.search} />
+      <Footer staticData={weather.static} />
       <ToastContainer position="top-right" autoClose={3000} />
-
     </>
   );
 }
