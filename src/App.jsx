@@ -14,7 +14,7 @@ function App() {
 
   const fetchData = async (city) => {
     const response = await fetch(
-      `http://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${city}&aqi=no`
+      `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${city}&aqi=no`
     );
 
     if (!response.ok) {
