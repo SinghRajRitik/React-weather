@@ -8,10 +8,10 @@ const Card = ({weather}) => {
  
   return (<>
     <div className='h-[55vh] bg-blue-200 flex flex-col justify-between'>
-      <div className='my-5  text-center font-poppins text-2xl'>Weather for <span className='text-blue-500'>{weather.location.name}</span></div>
+      <div className='my-5  text-center font-poppins text-2xl'>Weather for <span className='text-blue-800'>{weather.location.name}</span></div>
 
 
-      <div className='flex'>
+      <div className='flex justify-center'>
         <div className='h-[250px] w-[400px] bg-white border-2 border-gray-300 rounded-md shadow-md'>
           <div className='h-10 text-center text-2xl text-gray-600  bg-blue-400 rounded-md shadow-md'>
             <h4>Temperatures</h4>
@@ -63,6 +63,7 @@ const Card = ({weather}) => {
 
           </div>
         </div>
+
       </div>
 
     </div></>
